@@ -110,7 +110,12 @@ function New-Plan {
   if ($dup.StdOut -match '([0-9A-Fa-f-]{36})') {
     $newGuid = $matches[1]
     $quotedName = '"' + $Name.Replace('"', '""') + '"'
-    [void](Invoke-PowerCfg @("/changename", $newGuid, $quotedName))
+    $change = Invoke-PowerCfg @("/changename", $newGuid, $quotedName)
+    if ($change.ExitCode -ne 0) {
+      # Delete the created plan if rename fails
+      [void](Invoke-PowerCfg @("/delete", $newGuid))
+      throw "Failed to rename plan: $($change.StdErr)"
+    }
     if ($Activate) { [void](Invoke-PowerCfg @("/setactive", $newGuid)) }
     return $newGuid
   }
@@ -776,8 +781,6 @@ $TuneBtn.Add_Click({
         @("2a737441-1930-4402-8d77-b2bebba308a3", "48e6b7a6-50f5-4782-a5d4-53bb8f07e226", 0),   # USB selective suspend
         @("2a737441-1930-4402-8d77-b2bebba308a3", "498c044a-201b-4631-a522-5c744ed4e678", 0),   # Setting IOC on all TDs
         @("2e601130-5351-4d9d-8e04-252966bad054", "3166bc41-7e98-4e03-b34e-ec0f5f2b218e", 0),   # Execution Required timeout
-        @("3184c07a-6e24-4e3b-8e1f-7c9a4b578e2a", "c36f0eb4-2988-4a70-8eee-0884fc2c2433", 2),   # Intel(R)
-        @("3bcc29b5-1984-4490-8b43-9b3e8f3e9e9e", "c42b79aa-aa3a-484b-a98f-2cf32aa90a28", 3),   # Interrupt Steering Mode
         @("3bcc29b5-1984-4490-8b43-9b3e8f3e9e9e", "d502f7ee-1dc7-4efd-a55d-f04b6f5c0545", 10000), # Target Load
         @("3fa863aa-894a-46ae-a581-0c36d0e7d4e8", "3619c3f2-afb2-4afc-b0e9-e7fef372de36", 0),   # Config TDP Level
         @("4f971e89-eebd-4455-a8de-9e59040e7347", "5ca83367-6e45-459f-a27b-476b1d01c936", 0),   # Lid close action
