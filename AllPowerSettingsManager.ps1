@@ -1,11 +1,48 @@
 # AllPowerSettingsManager.ps1
 # Full power settings manager (WPF) for Windows:
-# - Enumerates ALL power settings (visible + hidden) via `powercfg /qh` (fallback to /q)
-# - Lets you edit AC/DC values (numeric or choice indexes)
+# - Enumerates ALL power settings (visible + hidden) via powercfg /qh (fallback to /q)
+# - Lets you edit Plugged-in / On-battery values (numeric or choice indexes)
 # - Can create & name a NEW plan from a base template (alias or GUID), then activate it
+# - Shows official setting Description (localized) pulled from registry and resolved via SHLoadIndirectString
 # Run as Administrator
 
 Add-Type -AssemblyName PresentationCore,PresentationFramework,WindowsBase
+
+# --- Load SHLoadIndirectString to resolve MUI @-style strings from the registry ---
+Add-Type -Language CSharp -TypeDefinition @"
+using System;
+using System.Runtime.InteropServices;
+using System.Text;
+public static class PowrprofNative {
+  [DllImport("shlwapi.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
+  public static extern int SHLoadIndirectString(string pszSource, StringBuilder pszOutBuf, int cchOutBuf, IntPtr pvReserved);
+}
+"@
+
+function Resolve-MUIString {
+  param([string]$s)
+  if ([string]::IsNullOrWhiteSpace($s)) { return $null }
+  if ($s.StartsWith('@')) {
+    $sb = New-Object System.Text.StringBuilder 2048
+    [void][PowrprofNative]::SHLoadIndirectString($s, $sb, $sb.Capacity, [IntPtr]::Zero)
+    $val = $sb.ToString()
+    if (![string]::IsNullOrWhiteSpace($val)) { return $val }
+  }
+  return $s
+}
+
+function Get-SettingMeta {
+  param([Parameter(Mandatory)][string]$SubGuid,
+        [Parameter(Mandatory)][string]$SetGuid)
+  $path = "HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\$SubGuid\$SetGuid"
+  try {
+    $p = Get-ItemProperty -Path $path -ErrorAction Stop
+    [pscustomobject]@{
+      FriendlyName = Resolve-MUIString $p.FriendlyName
+      Description  = Resolve-MUIString $p.Description
+    }
+  } catch { $null }
+}
 
 # --------------------- powercfg wrappers ---------------------
 function Invoke-PowerCfg {
@@ -84,7 +121,7 @@ function Set-SettingValue {
   [void](Invoke-PowerCfg @("/setdcvalueindex", $schemeGuid, $subGuid, $setGuid, $dcValue))
 }
 
-# --------------------- Parse `powercfg /qh` (robust, with /q fallback) ---------------------
+# --------------------- Parse powercfg /qh (robust, with /q fallback) ---------------------
 function Get-AllPowerSettings {
   function Parse-Out($text) {
     $lines = @()
@@ -171,7 +208,7 @@ $xaml = @"
       <RowDefinition Height='Auto'/>
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width='400' MinWidth='250'/>
+      <ColumnDefinition Width='420' MinWidth='250'/>
       <ColumnDefinition Width='Auto'/>
       <ColumnDefinition Width='*'/>
     </Grid.ColumnDefinitions>
@@ -220,6 +257,13 @@ $xaml = @"
           <Grid.ColumnDefinitions><ColumnDefinition Width='200'/><ColumnDefinition Width='*'/></Grid.ColumnDefinitions>
           <TextBlock Text='Units' Grid.Column='0' VerticalAlignment='Center'/>
           <TextBox x:Name='UnitsBox' Grid.Column='1' IsReadOnly='True' BorderThickness='0' Background='Transparent'/>
+        </Grid>
+
+        <!-- Official Description -->
+        <Grid Margin='0,0,0,10'>
+          <Grid.ColumnDefinitions><ColumnDefinition Width='200'/><ColumnDefinition Width='*'/></Grid.ColumnDefinitions>
+          <TextBlock Text='Description' Grid.Column='0' VerticalAlignment='Top'/>
+          <TextBlock x:Name='DescBox' Grid.Column='1' TextWrapping='Wrap'/>
         </Grid>
 
         <Separator Margin='0,6,0,12'/>
@@ -280,6 +324,7 @@ $RevealBtn    = $window.FindName("RevealBtn")
 $SelectedPath = $window.FindName("SelectedPath")
 $GuidBox      = $window.FindName("GuidBox")
 $UnitsBox     = $window.FindName("UnitsBox")
+$DescBox      = $window.FindName("DescBox")
 $AcChoice     = $window.FindName("AcChoice")
 $AcNumeric    = $window.FindName("AcNumeric")
 $AcHint       = $window.FindName("AcHint")
@@ -371,9 +416,22 @@ $SearchBox.Add_TextChanged({
 # Editor view
 function Show-ForSetting([object]$set) {
   if (-not $set) { return }
+
+  # Resolve and cache official metadata (friendly name + description)
+  if (-not ($set.PSObject.Properties.Name -contains 'Description') -or -not $set.Description) {
+    $meta = Get-SettingMeta -SubGuid $set.SubGuid -SetGuid $set.SetGuid
+    if ($meta) {
+      $set | Add-Member -NotePropertyName Description -NotePropertyValue $meta.Description -Force
+      if ($meta.FriendlyName) { $set.SetName = $meta.FriendlyName }
+    } else {
+      $set | Add-Member -NotePropertyName Description -NotePropertyValue $null -Force
+    }
+  }
+
   $SelectedPath.Text = "$($set.SubName)  ->  $($set.SetName)"
   $GuidBox.Text  = $set.SetGuid
   $UnitsBox.Text = $set.Units
+  $DescBox.Text  = if ($set.Description) { $set.Description } else { "" }
 
   $isChoice = ($set.Choices.Count -gt 0)
   if ($isChoice) {
@@ -447,10 +505,11 @@ $ApplyBtn.Add_Click({
     Set-SettingValue -schemeGuid $scheme -subGuid $set.SubGuid -setGuid $set.SetGuid -acValue $ac -dcValue $dc
   }
 
-  # Re-read current values
+  # Re-read current values and refresh UI (description stays cached)
   $all = Get-AllPowerSettings
   $match = ($all | ForEach-Object { $_.Settings } | Where-Object { $_.SetGuid -eq $set.SetGuid } | Select-Object -First 1)
-  if ($match) { $set.AC = $match.AC; $set.DC = $match.DC; Show-ForSetting $set }
+  if ($match) { $set.AC = $match.AC; $set.DC = $match.DC }
+  Show-ForSetting $set
   $InfoText.Text = "Applied to plan $scheme."
 })
 
