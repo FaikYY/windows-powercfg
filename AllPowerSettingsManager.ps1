@@ -135,13 +135,29 @@ function Set-SettingValue {
     [Parameter(Mandatory)][int]$acValue,
     [Parameter(Mandatory)][int]$dcValue
   )
-  Unhide-Setting -subGuid $subGuid -setGuid $setGuid
-  [void](Invoke-PowerCfg @("/setacvalueindex", $schemeGuid, $subGuid, $setGuid, $acValue))
-  [void](Invoke-PowerCfg @("/setdcvalueindex", $schemeGuid, $subGuid, $setGuid, $dcValue))
+  $unhide = Invoke-PowerCfg @("/attributes", $subGuid, $setGuid, "-ATTRIB_HIDE")
+  if ($unhide.ExitCode -ne 0) { throw "Failed to unhide setting: $($unhide.StdErr)" }
+  
+  $acSet = Invoke-PowerCfg @("/setacvalueindex", $schemeGuid, $subGuid, $setGuid, $acValue)
+  if ($acSet.ExitCode -ne 0) { throw "Failed to set AC value: $($acSet.StdErr)" }
+  
+  $dcSet = Invoke-PowerCfg @("/setdcvalueindex", $schemeGuid, $subGuid, $setGuid, $dcValue)
+  if ($dcSet.ExitCode -ne 0) { throw "Failed to set DC value: $($dcSet.StdErr)" }
 }
 
 # --------------------- Parse powercfg /qh (robust, with /q fallback) ---------------------
 function Get-AllPowerSettings {
+  param([string]$schemeGuid = $null)
+  
+  $originalActive = $global:Active
+  $tempActivate = $false
+  if ($schemeGuid -and $schemeGuid -ne $originalActive) {
+    # Temporarily activate the selected scheme to query its settings (including hidden)
+    [void](Invoke-PowerCfg @("/setactive", $schemeGuid))
+    $global:Active = $schemeGuid
+    $tempActivate = $true
+  }
+
   function Parse-Out($text) {
     $lines = @()
     foreach ($L in ($text -split "`r?`n")) { $lines += ($L -replace '[\u00A0]', ' ').TrimEnd() }
@@ -202,11 +218,23 @@ function Get-AllPowerSettings {
   # Try /qh first (hidden + visible)
   $qh = Invoke-PowerCfg @("/qh")
   $subs = Parse-Out $qh.StdOut
-  if ($subs.Count -gt 0) { return $subs }
+  if ($subs.Count -gt 0) {
+    if ($tempActivate) {
+      # Restore original active scheme
+      [void](Invoke-PowerCfg @("/setactive", $originalActive))
+      $global:Active = $originalActive
+    }
+    return $subs
+  }
 
   # Fallback to /q (visible only)
   $q = Invoke-PowerCfg @("/q")
   $subs = Parse-Out $q.StdOut
+  if ($tempActivate) {
+    # Restore original active scheme
+    [void](Invoke-PowerCfg @("/setactive", $originalActive))
+    $global:Active = $originalActive
+  }
   return $subs
 }
 
@@ -238,7 +266,8 @@ $xaml = @"
         <ComboBox x:Name='PlanCombo' Width='420' Margin='0,0,10,0'/>
         <Button x:Name='SetActiveBtn' Content='Set Active' Width='120' Margin='0,0,10,0'/>
         <Button x:Name='RefreshBtn' Content='Refresh (/qh)' Width='140' Margin='0,0,10,0'/>
-        <Button x:Name='ExportBtn' Content='Export .pow' Width='120'/>
+        <Button x:Name='ExportBtn' Content='Export Power Profile' Width='140'/>
+        <Button x:Name='ImportBtn' Content='Import Power Profile' Width='140' Margin='8,0,0,0'/>
         <Separator DockPanel.Dock='Left' Width='1' Margin='0,0,8,0' />
         
         <!-- Right section: Plan selection and other actions -->
@@ -341,6 +370,7 @@ $PlanCombo = $window.FindName("PlanCombo")
 $SetActiveBtn = $window.FindName("SetActiveBtn")
 $RefreshBtn = $window.FindName("RefreshBtn")
 $ExportBtn = $window.FindName("ExportBtn")
+$ImportBtn = $window.FindName("ImportBtn")  # Add this
 $CreatePlanBtn = $window.FindName("CreatePlanBtn")
 $DeletePlanBtn = $window.FindName("DeletePlanBtn")
 
@@ -420,9 +450,10 @@ function Build-Tree([string]$query) {
 
 # Build tree data (AllData) and then render it
 function Refresh-DataAndTree {
+  param([string]$schemeGuid = $null)
   $InfoText.Text = "Enumerating power settings with 'powercfg /qh'..."
   try {
-    $global:AllData = Get-AllPowerSettings
+    $global:AllData = Get-AllPowerSettings -schemeGuid $schemeGuid
   }
   catch {
     $InfoText.Text = "Failed to read settings via /qh. Run PowerShell as Administrator. Details: $_"
@@ -432,7 +463,8 @@ function Refresh-DataAndTree {
   Build-Tree -query $SearchBox.Text
 
   $totalSettings = (($global:AllData | ForEach-Object { $_.Settings.Count }) | Measure-Object -Sum).Sum
-  $InfoText.Text = "Loaded $($global:AllData.Count) subgroups, $totalSettings settings."
+  $schemeName = if ($schemeGuid) { ($global:Schemes | Where-Object Guid -eq $schemeGuid).Name } else { "active plan" }
+  $InfoText.Text = "Loaded $($global:AllData.Count) subgroups, $totalSettings settings for $schemeName."
 }
 Refresh-DataAndTree
 
@@ -505,9 +537,29 @@ $SetActiveBtn.Add_Click({
 $RefreshBtn.Add_Click({ Refresh-DataAndTree })
 
 $ExportBtn.Add_Click({
-    $file = Join-Path $env:USERPROFILE "Desktop\power-backup-$(Get-Date -Format 'yyyyMMdd-HHmm').pow"
-    [void](Invoke-PowerCfg @("/export", ('"' + $file + '"')))
-    $InfoText.Text = "Exported to $file"
+    if ($PlanCombo.SelectedIndex -lt 0) { $InfoText.Text = "Select a plan to export."; return }
+    $scheme = $global:Schemes[$PlanCombo.SelectedIndex]
+    $scriptDir = $PSScriptRoot
+    if (-not $scriptDir) { $scriptDir = Get-Location }
+    $file = Join-Path $scriptDir "power-backup-$($scheme.Name.Replace(' ', '_'))-$(Get-Date -Format 'yyyyMMdd-HHmm').pow"
+    [void](Invoke-PowerCfg @("/export", ('"' + $file + '"'), $scheme.Guid))
+    $InfoText.Text = "Exported '$($scheme.Name)' to $file"
+  })
+
+$ImportBtn.Add_Click({
+    Add-Type -AssemblyName System.Windows.Forms
+    $fileDialog = New-Object System.Windows.Forms.OpenFileDialog
+    $fileDialog.Filter = "Power Scheme Files (*.pow)|*.pow"
+    $fileDialog.Title = "Select a Power Profile to Import"
+    if ($fileDialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+      $import = Invoke-PowerCfg @("/import", ('"' + $fileDialog.FileName + '"'))
+      if ($import.ExitCode -eq 0) {
+        $InfoText.Text = "Imported power plan from $($fileDialog.FileName)."
+        Refresh-Plans
+      } else {
+        $InfoText.Text = "Import failed: $($import.StdErr)"
+      }
+    }
   })
 
 $RevealBtn.Add_Click({ Start-Process "control.exe" "powercfg.cpl" })
@@ -525,22 +577,27 @@ $ApplyBtn.Add_Click({
     if ($PlanCombo.SelectedIndex -lt 0) { return }
     $scheme = $global:Schemes[$PlanCombo.SelectedIndex].Guid
 
-    if ($set.Choices.Count -gt 0) {
-      $ac = $set.Choices[ [Math]::Max($AcChoice.SelectedIndex, 0) ].Index
-      $dc = $set.Choices[ [Math]::Max($DcChoice.SelectedIndex, 0) ].Index
-      Set-SettingValue -schemeGuid $scheme -subGuid $set.SubGuid -setGuid $set.SetGuid -acValue $ac -dcValue $dc
-    }
-    else {
-      $ac = [int]$AcNumeric.Text; $dc = [int]$DcNumeric.Text
-      Set-SettingValue -schemeGuid $scheme -subGuid $set.SubGuid -setGuid $set.SetGuid -acValue $ac -dcValue $dc
-    }
+    try {
+      if ($set.Choices.Count -gt 0) {
+        $ac = $set.Choices[ [Math]::Max($AcChoice.SelectedIndex, 0) ].Index
+        $dc = $set.Choices[ [Math]::Max($DcChoice.SelectedIndex, 0) ].Index
+        Set-SettingValue -schemeGuid $scheme -subGuid $set.SubGuid -setGuid $set.SetGuid -acValue $ac -dcValue $dc
+      }
+      else {
+        $ac = [int]$AcNumeric.Text; $dc = [int]$DcNumeric.Text
+        Set-SettingValue -schemeGuid $scheme -subGuid $set.SubGuid -setGuid $set.SetGuid -acValue $ac -dcValue $dc
+      }
 
-    # Re-read current values and refresh UI (description stays cached)
-    $all = Get-AllPowerSettings
-    $match = ($all | ForEach-Object { $_.Settings } | Where-Object { $_.SetGuid -eq $set.SetGuid } | Select-Object -First 1)
-    if ($match) { $set.AC = $match.AC; $set.DC = $match.DC }
-    Show-ForSetting $set
-    $InfoText.Text = "Applied to plan $scheme."
+      # Re-read current values for the selected plan and refresh UI
+      $all = Get-AllPowerSettings -schemeGuid $scheme
+      $match = ($all | ForEach-Object { $_.Settings } | Where-Object { $_.SetGuid -eq $set.SetGuid } | Select-Object -First 1)
+      if ($match) { $set.AC = $match.AC; $set.DC = $match.DC }
+      Show-ForSetting $set
+      $InfoText.Text = "Applied to plan '$($global:Schemes[$PlanCombo.SelectedIndex].Name)'."
+    }
+    catch {
+      $InfoText.Text = "Failed to apply: $_"
+    }
   })
 
 $CreatePlanBtn.Add_Click({
