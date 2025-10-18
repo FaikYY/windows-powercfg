@@ -7,14 +7,17 @@
 # - Real-time search in the LEFT panel (filters subgroups to only matching items)
 # Run as Administrator
 
-# Self-elevation: Check if running as admin, relaunch if not
+Add-Type -AssemblyName PresentationCore, PresentationFramework, WindowsBase
+
+# Check for admin and Windows PowerShell
 if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-  $arguments = "& '" + $myinvocation.mycommand.definition + "'"
-  Start-Process powershell -Verb runAs -ArgumentList $arguments
+  [System.Windows.MessageBox]::Show("Please run this script as Administrator.", "Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
   Exit
 }
-
-Add-Type -AssemblyName PresentationCore, PresentationFramework, WindowsBase
+if ($PSVersionTable.PSEdition -ne 'Desktop') {
+  [System.Windows.MessageBox]::Show("This script requires Windows PowerShell (not PowerShell Core).", "Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+  Exit
+}
 
 # --- Load SHLoadIndirectString to resolve MUI @-style strings from the registry ---
 Add-Type -Language CSharp -TypeDefinition @"
@@ -57,7 +60,7 @@ function Get-SettingMeta {
 function Invoke-PowerCfg {
   param([Parameter(Mandatory)][string[]]$Args)
   $psi = New-Object System.Diagnostics.ProcessStartInfo
-  $psi.FileName = "powercfg.exe"
+  $psi.FileName = "$env:SystemRoot\System32\powercfg.exe"
   $psi.Arguments = ($Args -join ' ')
   $psi.RedirectStandardOutput = $true
   $psi.RedirectStandardError = $true
@@ -100,14 +103,19 @@ function New-Plan {
     [switch]$Activate
   )
   $dup = Invoke-PowerCfg @("/duplicatescheme", $BaseAlias)
-  if ($dup.ExitCode -ne 0) { throw "Failed to duplicate from ${BaseAlias}: $($dup.StdErr)" }
+  if ($dup.ExitCode -ne 0) { 
+    $dup | Out-Host
+    throw "Failed to duplicate from ${BaseAlias}: $($dup.StdErr)" 
+  }
   if ($dup.StdOut -match '([0-9A-Fa-f-]{36})') {
     $newGuid = $matches[1]
-    [void](Invoke-PowerCfg @("/changename", $newGuid, ('"' + $Name + '"')))
+    $quotedName = '"' + $Name.Replace('"', '""') + '"'
+    [void](Invoke-PowerCfg @("/changename", $newGuid, $quotedName))
     if ($Activate) { [void](Invoke-PowerCfg @("/setactive", $newGuid)) }
     return $newGuid
   }
   else {
+    $dup | Out-Host
     throw "Could not parse new GUID from /duplicatescheme output."
   }
 }
@@ -573,8 +581,13 @@ $CreatePlanBtn.Add_Click({
 
     $result = $null
     $OkBtn.Add_Click({
-        if ([string]::IsNullOrWhiteSpace($NameBox.Text)) {
+        $name = $NameBox.Text.Trim()
+        if ([string]::IsNullOrWhiteSpace($name)) {
           [System.Windows.MessageBox]::Show("Please enter a name for the plan.", "Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+          return
+        }
+        if ($name -match '[^a-zA-Z0-9\s\-_]') {
+          [System.Windows.MessageBox]::Show("Plan name contains invalid characters. Use only letters, numbers, spaces, hyphens, and underscores.", "Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
           return
         }
         if ($BaseCombo.SelectedIndex -lt 0) {
@@ -582,7 +595,7 @@ $CreatePlanBtn.Add_Click({
           return
         }
         $script:result = @{
-          Name = $NameBox.Text
+          Name = $name
           Base = $BaseCombo.SelectedItem.ToString()
         }
         $dialog.Close()
@@ -592,10 +605,10 @@ $CreatePlanBtn.Add_Click({
 
     [void]$dialog.ShowDialog()
 
-    if (-not $result) { $InfoText.Text = "Plan creation cancelled."; return }
+    if (-not $script:result) { $InfoText.Text = "Plan creation cancelled."; return }
 
     # Parse the GUID from the selected base
-    if ($result.Base -match '\(([a-f0-9-]+)\)$') {
+    if ($script:result.Base -match '\(([a-fA-F0-9-]+)\)$') {
       $baseGuid = $matches[1]
     }
     else {
@@ -603,15 +616,16 @@ $CreatePlanBtn.Add_Click({
     }
 
     try {
-      $newGuid = New-Plan -BaseAlias $baseGuid -Name $result.Name
-      $InfoText.Text = "Created new plan '$($result.Name)' ($newGuid)."
+      $newGuid = New-Plan -BaseAlias $baseGuid -Name $script:result.Name
+      [System.Windows.MessageBox]::Show("Plan '$($script:result.Name)' created successfully with GUID $newGuid.", "Success", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information)  # Add success pop-up
+      $InfoText.Text = "Created new plan '$($script:result.Name)' ($newGuid)."
       Refresh-Plans
       # Ensure the new plan is selected in the dropdown
       $idx = ($global:Schemes | ForEach-Object Guid).IndexOf($newGuid)
       if ($idx -ge 0) { $PlanCombo.SelectedIndex = $idx }
     }
     catch {
-      $InfoText.Text = "Failed to create plan: $_"
+      $InfoText.Text = "Failed to create plan: $_ | Base: $baseGuid"
     }
   })
 
