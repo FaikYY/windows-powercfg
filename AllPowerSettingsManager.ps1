@@ -156,91 +156,102 @@ function Get-AllPowerSettings {
 
 # --------------------- XAML UI ---------------------
 $xaml = @"
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="All Power Settings Manager" Height="760" Width="1200"
-        FontFamily="Segoe UI" FontSize="13" WindowStartupLocation="CenterScreen">
+<Window xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'
+        xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
+        Title='All Power Settings Manager'
+        Height='800' Width='1500'
+        FontFamily='Segoe UI' FontSize='13'
+        WindowStartupLocation='CenterScreen'>
+
   <Grid>
+    <!-- Define rows/columns BEFORE children -->
     <Grid.RowDefinitions>
-      <RowDefinition Height="Auto"/>
-      <RowDefinition Height="*"/>
-      <RowDefinition Height="Auto"/>
+      <RowDefinition Height='Auto'/>
+      <RowDefinition Height='*'/>
+      <RowDefinition Height='Auto'/>
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="380"/>
-      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width='400' MinWidth='250'/>
+      <ColumnDefinition Width='Auto'/>
+      <ColumnDefinition Width='*'/>
     </Grid.ColumnDefinitions>
 
     <!-- Top bar -->
-    <DockPanel Grid.Row="0" Grid.ColumnSpan="2" Margin="10">
-      <ComboBox x:Name="PlanCombo" Width="420" Margin="0,0,10,0"/>
-      <Button x:Name="SetActiveBtn" Content="Set Active" Width="120" Margin="0,0,10,0"/>
-      <Button x:Name="RefreshBtn" Content="Refresh (/qh)" Width="140" Margin="0,0,10,0"/>
-      <Button x:Name="ExportBtn" Content="Export .pow" Width="120" Margin="0,0,10,0"/>
-      <Separator Width="1" Margin="8,0" />
-      <TextBox x:Name="NewPlanName" Width="220" Margin="8,0" VerticalContentAlignment="Center" ToolTip="New plan name" />
-      <ComboBox x:Name="NewPlanBase" Width="200" Margin="0,0,8,0" ToolTip="Base template"/>
-      <Button x:Name="CreatePlanBtn" Content="Create plan" Width="120"/>
+    <DockPanel Grid.Row='0' Grid.ColumnSpan='3' Margin='10'>
+      <ComboBox x:Name='PlanCombo' Width='420' Margin='0,0,10,0'/>
+      <Button x:Name='SetActiveBtn' Content='Set Active' Width='120' Margin='0,0,10,0'/>
+      <Button x:Name='RefreshBtn' Content='Refresh (/qh)' Width='140' Margin='0,0,10,0'/>
+      <Button x:Name='ExportBtn' Content='Export .pow' Width='120' Margin='0,0,10,0'/>
+      <Separator Width='1' Margin='8,0' />
+      <TextBox x:Name='NewPlanName' Width='220' Margin='8,0' VerticalContentAlignment='Center' ToolTip='New plan name' />
+      <ComboBox x:Name='NewPlanBase' Width='200' Margin='0,0,8,0' ToolTip='Base template'/>
+      <Button x:Name='CreatePlanBtn' Content='Create plan' Width='120'/>
     </DockPanel>
 
-    <!-- Tree -->
-    <Border Grid.Row="1" Grid.Column="0" Margin="10" BorderBrush="#DDD" BorderThickness="1" CornerRadius="8">
+    <!-- Left tree panel -->
+    <Border Grid.Row='1' Grid.Column='0' Margin='10' BorderBrush='#DDDDDD' BorderThickness='1' CornerRadius='8'>
       <DockPanel>
-        <TextBox x:Name="SearchBox" Margin="6" Height="28" VerticalContentAlignment="Center" />
-        <ScrollViewer DockPanel.Dock="Bottom">
-          <TreeView x:Name="SettingsTree" />
+        <TextBox x:Name='SearchBox' Margin='6' Height='28' VerticalContentAlignment='Center' />
+        <ScrollViewer DockPanel.Dock='Bottom'>
+          <TreeView x:Name='SettingsTree'/>
         </ScrollViewer>
       </DockPanel>
     </Border>
 
-    <!-- Details -->
-    <Border Grid.Row="1" Grid.Column="1" Margin="10" BorderBrush="#DDD" BorderThickness="1" CornerRadius="8" Padding="16">
+    <!-- Splitter between left and right -->
+    <GridSplitter Grid.Row='1' Grid.Column='1'
+                  Width='6' Background='#DDDDDD'
+                  HorizontalAlignment='Center' VerticalAlignment='Stretch'
+                  ResizeBehavior='PreviousAndNext' ResizeDirection='Columns'/>
+
+    <!-- Right detail panel -->
+    <Border Grid.Row='1' Grid.Column='2' Margin='10' BorderBrush='#DDDDDD' BorderThickness='1' CornerRadius='8' Padding='16'>
       <StackPanel>
-        <TextBlock Text="Setting" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,6"/>
-        <TextBlock x:Name="SelectedPath" Foreground="#666" Margin="0,0,0,16"/>
+        <TextBlock Text='Setting' FontSize='18' FontWeight='SemiBold' Margin='0,0,0,6'/>
+        <TextBlock x:Name='SelectedPath' Foreground='#666666' Margin='0,0,0,16'/>
 
-        <Grid Margin="0,0,0,10">
-          <Grid.ColumnDefinitions><ColumnDefinition Width="200"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-          <TextBlock Text="GUID" Grid.Column="0" VerticalAlignment="Center"/>
-          <TextBox x:Name="GuidBox" Grid.Column="1" IsReadOnly="True" BorderThickness="0" Background="Transparent"/>
+        <Grid Margin='0,0,0,10'>
+          <Grid.ColumnDefinitions><ColumnDefinition Width='200'/><ColumnDefinition Width='*'/></Grid.ColumnDefinitions>
+          <TextBlock Text='GUID' Grid.Column='0' VerticalAlignment='Center'/>
+          <TextBox x:Name='GuidBox' Grid.Column='1' IsReadOnly='True' BorderThickness='0' Background='Transparent'/>
         </Grid>
 
-        <Grid Margin="0,0,0,10">
-          <Grid.ColumnDefinitions><ColumnDefinition Width="200"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-          <TextBlock Text="Units" Grid.Column="0" VerticalAlignment="Center"/>
-          <TextBox x:Name="UnitsBox" Grid.Column="1" IsReadOnly="True" BorderThickness="0" Background="Transparent"/>
+        <Grid Margin='0,0,0,10'>
+          <Grid.ColumnDefinitions><ColumnDefinition Width='200'/><ColumnDefinition Width='*'/></Grid.ColumnDefinitions>
+          <TextBlock Text='Units' Grid.Column='0' VerticalAlignment='Center'/>
+          <TextBox x:Name='UnitsBox' Grid.Column='1' IsReadOnly='True' BorderThickness='0' Background='Transparent'/>
         </Grid>
 
-        <Separator Margin="0,6,0,12"/>
+        <Separator Margin='0,6,0,12'/>
 
-        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-          <TextBlock Text="AC value" Width="200" VerticalAlignment="Center"/>
-          <ComboBox x:Name="AcChoice" Width="320" Visibility="Collapsed"/>
-          <TextBox  x:Name="AcNumeric" Width="140" Visibility="Collapsed"/>
-          <TextBlock x:Name="AcHint" Margin="8,0,0,0" Foreground="#666"/>
+        <StackPanel Orientation='Horizontal' Margin='0,0,0,8'>
+          <TextBlock Text='Plugged in value' Width='200' VerticalAlignment='Center'/>
+          <ComboBox x:Name='AcChoice' Width='320' Visibility='Collapsed'/>
+          <TextBox  x:Name='AcNumeric' Width='140' Visibility='Collapsed'/>
+          <TextBlock x:Name='AcHint' Margin='8,0,0,0' Foreground='#666666'/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Margin="0,0,0,18">
-          <TextBlock Text="DC value" Width="200" VerticalAlignment="Center"/>
-          <ComboBox x:Name="DcChoice" Width="320" Visibility="Collapsed"/>
-          <TextBox  x:Name="DcNumeric" Width="140" Visibility="Collapsed"/>
-          <TextBlock x:Name="DcHint" Margin="8,0,0,0" Foreground="#666"/>
+        <StackPanel Orientation='Horizontal' Margin='0,0,0,18'>
+          <TextBlock Text='On battery value' Width='200' VerticalAlignment='Center'/>
+          <ComboBox x:Name='DcChoice' Width='320' Visibility='Collapsed'/>
+          <TextBox  x:Name='DcNumeric' Width='140' Visibility='Collapsed'/>
+          <TextBlock x:Name='DcHint' Margin='8,0,0,0' Foreground='#666666'/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
-          <Button x:Name="ApplyBtn" Content="Apply to plan" Width="140" Margin="0,0,10,0"/>
-          <Button x:Name="UnhideBtn" Content="Unhide setting" Width="140" Margin="0,0,10,0"/>
-          <Button x:Name="RevealBtn" Content="Open in Advanced UI" Width="180"/>
+        <StackPanel Orientation='Horizontal' Margin='0,0,0,0'>
+          <Button x:Name='ApplyBtn' Content='Apply to plan' Width='140' Margin='0,0,10,0'/>
+          <Button x:Name='UnhideBtn' Content='Unhide setting' Width='140' Margin='0,0,10,0'/>
+          <Button x:Name='RevealBtn' Content='Open in Advanced UI' Width='180'/>
         </StackPanel>
 
-        <TextBlock x:Name="InfoText" Margin="0,12,0,0" TextWrapping="Wrap" Foreground="#666"/>
+        <TextBlock x:Name='InfoText' Margin='0,12,0,0' TextWrapping='Wrap' Foreground='#666666'/>
       </StackPanel>
     </Border>
 
     <!-- Footer -->
-    <DockPanel Grid.Row="2" Grid.ColumnSpan="2" Margin="10">
-      <TextBlock Text="Tip: values are raw indices. Many numeric settings are in Seconds or % (see Units)."
-                 Foreground="#666"/>
+    <DockPanel Grid.Row='2' Grid.ColumnSpan='3' Margin='10'>
+      <TextBlock Text='Tip: values are raw indices. Many numeric settings are in Seconds or % (see Units).'
+                 Foreground='#666666'/>
     </DockPanel>
   </Grid>
 </Window>
@@ -294,11 +305,7 @@ Refresh-Plans
 
 # Base templates for new plan
 $NewPlanBase.Items.Clear()
-$baseAliases = @(
-  'SCHEME_BALANCED',   # Balanced
-  'SCHEME_MAX',        # High performance
-  'SCHEME_MIN'         # Power saver
-)
+$baseAliases = @('SCHEME_BALANCED','SCHEME_MAX','SCHEME_MIN')
 foreach ($b in $baseAliases) { [void]$NewPlanBase.Items.Add($b) }
 foreach ($s in $global:Schemes) { [void]$NewPlanBase.Items.Add($s.Guid) }
 $NewPlanBase.SelectedIndex = 0
