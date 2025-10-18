@@ -120,12 +120,6 @@ function New-Plan {
   }
 }
 
-# Unhide a setting (safe if already visible)
-function Unhide-Setting {
-  param([string]$subGuid, [string]$setGuid)
-  [void](Invoke-PowerCfg @("/attributes", $subGuid, $setGuid, "-ATTRIB_HIDE"))
-}
-
 # Apply values to a plan
 function Set-SettingValue {
   param(
@@ -135,14 +129,21 @@ function Set-SettingValue {
     [Parameter(Mandatory)][int]$acValue,
     [Parameter(Mandatory)][int]$dcValue
   )
+  Write-Host "Applying to plan $schemeGuid, setting $setGuid, AC=$acValue, DC=$dcValue"
+
   $unhide = Invoke-PowerCfg @("/attributes", $subGuid, $setGuid, "-ATTRIB_HIDE")
+  Write-Host "Unhide result: ExitCode=$($unhide.ExitCode), StdErr=$($unhide.StdErr)"
   if ($unhide.ExitCode -ne 0) { throw "Failed to unhide setting: $($unhide.StdErr)" }
-  
+
   $acSet = Invoke-PowerCfg @("/setacvalueindex", $schemeGuid, $subGuid, $setGuid, $acValue)
+  Write-Host "AC set result: ExitCode=$($acSet.ExitCode), StdErr=$($acSet.StdErr)"
   if ($acSet.ExitCode -ne 0) { throw "Failed to set AC value: $($acSet.StdErr)" }
-  
+
   $dcSet = Invoke-PowerCfg @("/setdcvalueindex", $schemeGuid, $subGuid, $setGuid, $dcValue)
+  Write-Host "DC set result: ExitCode=$($dcSet.ExitCode), StdErr=$($dcSet.StdErr)"
   if ($dcSet.ExitCode -ne 0) { throw "Failed to set DC value: $($dcSet.StdErr)" }
+
+  Write-Host "Set completed successfully."
 }
 
 # --------------------- Parse powercfg /qh (robust, with /q fallback) ---------------------
@@ -268,6 +269,7 @@ $xaml = @"
         <Button x:Name='RefreshBtn' Content='Refresh (/qh)' Width='140' Margin='0,0,10,0'/>
         <Button x:Name='ExportBtn' Content='Export Power Profile' Width='140'/>
         <Button x:Name='ImportBtn' Content='Import Power Profile' Width='140' Margin='8,0,0,0'/>
+        <Button x:Name='TuneBtn' Content='Tune for Max Performance (AC)' Width='200' Margin='8,0,0,0'/>
         <Separator DockPanel.Dock='Left' Width='1' Margin='0,0,8,0' />
         
         <!-- Right section: Plan selection and other actions -->
@@ -344,7 +346,6 @@ $xaml = @"
 
         <StackPanel Orientation='Horizontal' Margin='0,0,0,0'>
           <Button x:Name='ApplyBtn' Content='Apply to plan' Width='140' Margin='0,0,10,0'/>
-          <Button x:Name='UnhideBtn' Content='Unhide setting' Width='140' Margin='0,0,10,0'/>
           <Button x:Name='RevealBtn' Content='Open in Advanced UI' Width='180'/>
         </StackPanel>
 
@@ -370,7 +371,8 @@ $PlanCombo = $window.FindName("PlanCombo")
 $SetActiveBtn = $window.FindName("SetActiveBtn")
 $RefreshBtn = $window.FindName("RefreshBtn")
 $ExportBtn = $window.FindName("ExportBtn")
-$ImportBtn = $window.FindName("ImportBtn")  # Add this
+$ImportBtn = $window.FindName("ImportBtn")
+$TuneBtn = $window.FindName("TuneBtn")
 $CreatePlanBtn = $window.FindName("CreatePlanBtn")
 $DeletePlanBtn = $window.FindName("DeletePlanBtn")
 
@@ -379,7 +381,6 @@ $SearchBox = $window.FindName("SearchBox")
 $ClearSearchBtn = $window.FindName("ClearSearchBtn")
 
 $ApplyBtn = $window.FindName("ApplyBtn")
-$UnhideBtn = $window.FindName("UnhideBtn")
 $RevealBtn = $window.FindName("RevealBtn")
 
 $SelectedPath = $window.FindName("SelectedPath")
@@ -398,16 +399,33 @@ $InfoText = $window.FindName("InfoText")
 $global:Schemes = Get-Schemes
 $global:Active = Get-ActiveSchemeGuid
 $global:AllData = @()
+$settingsFile = Join-Path $PSScriptRoot "app_settings.json"
+$global:LastSelectedGuid = $null
+if (Test-Path $settingsFile) {
+  try {
+    $settings = Get-Content $settingsFile -Raw | ConvertFrom-Json
+    $global:LastSelectedGuid = $settings.LastSelectedGuid
+  } catch { }
+}
 
 # Populate plan combo
 function Refresh-Plans {
   $PlanCombo.Items.Clear()
   $global:Schemes = Get-Schemes
   foreach ($s in $global:Schemes) { [void]$PlanCombo.Items.Add("$($s.Name)   ($($s.Guid))") }
-  $idx = ($global:Schemes | ForEach-Object Guid).IndexOf($global:Active)
+  $idx = if ($global:LastSelectedGuid) { ($global:Schemes | ForEach-Object Guid).IndexOf($global:LastSelectedGuid) } else { ($global:Schemes | ForEach-Object Guid).IndexOf($global:Active) }
   if ($idx -ge 0) { $PlanCombo.SelectedIndex = $idx } elseif ($PlanCombo.Items.Count -gt 0) { $PlanCombo.SelectedIndex = 0 }
 }
 Refresh-Plans
+
+$PlanCombo.Add_SelectionChanged({
+  if ($PlanCombo.SelectedIndex -lt 0) { return }
+  $scheme = $global:Schemes[$PlanCombo.SelectedIndex]
+  $global:LastSelectedGuid = $scheme.Guid
+  $settings = @{LastSelectedGuid = $global:LastSelectedGuid}
+  $settings | ConvertTo-Json | Set-Content $settingsFile
+  Refresh-DataAndTree -schemeGuid $scheme.Guid
+})
 
 # Build a filtered tree from the current data + query
 function Build-Tree([string]$query) {
@@ -451,6 +469,9 @@ function Build-Tree([string]$query) {
 # Build tree data (AllData) and then render it
 function Refresh-DataAndTree {
   param([string]$schemeGuid = $null)
+  if (-not $schemeGuid) {
+    $schemeGuid = if ($global:LastSelectedGuid) { $global:LastSelectedGuid } else { $null }
+  }
   $InfoText.Text = "Enumerating power settings with 'powercfg /qh'..."
   try {
     $global:AllData = Get-AllPowerSettings -schemeGuid $schemeGuid
@@ -541,9 +562,41 @@ $ExportBtn.Add_Click({
     $scheme = $global:Schemes[$PlanCombo.SelectedIndex]
     $scriptDir = $PSScriptRoot
     if (-not $scriptDir) { $scriptDir = Get-Location }
-    $file = Join-Path $scriptDir "power-backup-$($scheme.Name.Replace(' ', '_'))-$(Get-Date -Format 'yyyyMMdd-HHmm').pow"
-    [void](Invoke-PowerCfg @("/export", ('"' + $file + '"'), $scheme.Guid))
-    $InfoText.Text = "Exported '$($scheme.Name)' to $file"
+    $baseName = "power-backup-$($scheme.Name.Replace(' ', '_'))-$(Get-Date -Format 'yyyyMMdd-HHmm')"
+    $powFile = Join-Path $scriptDir "$baseName.pow"
+    $txtFile = Join-Path $scriptDir "$baseName.txt"
+    
+    # Export POW
+    [void](Invoke-PowerCfg @("/export", ('"' + $powFile + '"'), $scheme.Guid))
+    
+    # Generate TXT with human-readable settings
+    $txtContent = @"
+Power Plan Export: $($scheme.Name)
+GUID: $($scheme.Guid)
+Exported on: $(Get-Date)
+
+Settings:
+"@
+    foreach ($sub in $global:AllData) {
+      $txtContent += "`n`nSubgroup: $($sub.SubName) ($($sub.SubGuid))"
+      foreach ($set in $sub.Settings) {
+        $txtContent += "`n  Setting: $($set.SetName) ($($set.SetGuid))"
+        if ($set.Units) { $txtContent += "`n    Units: $($set.Units)" }
+        if ($set.Min -ne $null -and $set.Max -ne $null) { $txtContent += "`n    Range: $($set.Min) - $($set.Max)" }
+        $txtContent += "`n    Plugged in (AC) Value: $($set.AC)"
+        $txtContent += "`n    On battery (DC) Value: $($set.DC)"
+        if ($set.Description) { $txtContent += "`n    Description: $($set.Description)" }
+        if ($set.Choices.Count -gt 0) {
+          $txtContent += "`n    Choices:"
+          foreach ($c in $set.Choices) {
+            $txtContent += "`n      $($c.Index): $($c.Name)"
+          }
+        }
+      }
+    }
+    $txtContent | Out-File -FilePath $txtFile -Encoding UTF8
+    
+    $InfoText.Text = "Exported '$($scheme.Name)' to $powFile and $txtFile"
   })
 
 $ImportBtn.Add_Click({
@@ -563,13 +616,6 @@ $ImportBtn.Add_Click({
   })
 
 $RevealBtn.Add_Click({ Start-Process "control.exe" "powercfg.cpl" })
-
-$UnhideBtn.Add_Click({
-    $sel = $Tree.SelectedItem; if (-not $sel) { return }
-    $set = $sel.Tag; if (-not $set -or -not $set.SetGuid) { return }
-    Unhide-Setting -subGuid $set.SubGuid -setGuid $set.SetGuid
-    $InfoText.Text = "Unhid $($set.SetName)."
-  })
 
 $ApplyBtn.Add_Click({
     $sel = $Tree.SelectedItem; if (-not $sel) { return }
@@ -594,6 +640,9 @@ $ApplyBtn.Add_Click({
       if ($match) { $set.AC = $match.AC; $set.DC = $match.DC }
       Show-ForSetting $set
       $InfoText.Text = "Applied to plan '$($global:Schemes[$PlanCombo.SelectedIndex].Name)'."
+      if ($scheme -ne $global:Active) {
+        $InfoText.Text += " Note: This plan is not active. Select it again to view the updated settings."
+      }
     }
     catch {
       $InfoText.Text = "Failed to apply: $_"
@@ -704,5 +753,79 @@ $DeletePlanBtn.Add_Click({
     }
   })
 
+$TuneBtn.Add_Click({
+    if ($PlanCombo.SelectedIndex -lt 0) { $InfoText.Text = "Select a plan to tune."; return }
+    $scheme = $global:Schemes[$PlanCombo.SelectedIndex]
+    $schemeGuid = $scheme.Guid
+
+    try {
+      $InfoText.Text = "Applying max performance tuning to '$($scheme.Name)'... This may take a minute."
+
+      # Tuned AC values (from the previous analysis) - AC only, DC preserved
+      $tunedSettings = @(
+        # Subgroup GUID, Setting GUID, Tuned AC Value
+        @("fea3413e-7e05-4911-9a71-700331f1c294", "245d8541-3943-4422-b025-13a784f679b7", 0),  # Power plan type
+        @("0012ee47-9041-4b5d-9b77-535fba8b1442", "6738e2c4-e8a5-4a42-b16a-e040e769756e", -1),  # Turn off hard disk after
+        @("0012ee47-9041-4b5d-9b77-535fba8b1442", "80e3c60e-bb94-4ad8-bbe0-0d3195efc663", 0),   # Hard disk burst ignore time
+        @("0d7dbae2-4294-402a-ba8e-26777e8488cd", "309dce9b-bef4-4119-9921-a851fb12f0f4", 0),   # Slide show
+        @("19cbb8fa-5279-450e-9fac-8a3d5fedd0c1", "12bbebe6-58d6-4636-95bb-3217ef867c1a", 0),   # Power Saving Mode
+        @("238c9fa8-0aad-41ed-83f4-97be242c8f20", "29f6c1db-86da-48c5-9fdb-f2b67b1f44da", -1),  # Sleep after
+        @("238c9fa8-0aad-41ed-83f4-97be242c8f20", "9d7815a6-7ee4-497e-8888-515a05f02364", 0),   # Hibernate after
+        @("238c9fa8-0aad-41ed-83f4-97be242c8f20", "a4b195f5-8225-47d8-8012-9d41369786e2", 1),   # Allow wake timers
+        @("238c9fa8-0aad-41ed-83f4-97be242c8f20", "d4c1d4c8-d5cc-43d3-b83e-fc51215cb04d", 0),   # Allow sleep with remote opens
+        @("2a737441-1930-4402-8d77-b2bebba308a3", "48e6b7a6-50f5-4782-a5d4-53bb8f07e226", 0),   # USB selective suspend
+        @("2a737441-1930-4402-8d77-b2bebba308a3", "498c044a-201b-4631-a522-5c744ed4e678", 0),   # Setting IOC on all TDs
+        @("2e601130-5351-4d9d-8e04-252966bad054", "3166bc41-7e98-4e03-b34e-ec0f5f2b218e", 0),   # Execution Required timeout
+        @("3184c07a-6e24-4e3b-8e1f-7c9a4b578e2a", "c36f0eb4-2988-4a70-8eee-0884fc2c2433", 2),   # Intel(R)
+        @("3bcc29b5-1984-4490-8b43-9b3e8f3e9e9e", "c42b79aa-aa3a-484b-a98f-2cf32aa90a28", 3),   # Interrupt Steering Mode
+        @("3bcc29b5-1984-4490-8b43-9b3e8f3e9e9e", "d502f7ee-1dc7-4efd-a55d-f04b6f5c0545", 10000), # Target Load
+        @("3fa863aa-894a-46ae-a581-0c36d0e7d4e8", "3619c3f2-afb2-4afc-b0e9-e7fef372de36", 0),   # Config TDP Level
+        @("4f971e89-eebd-4455-a8de-9e59040e7347", "5ca83367-6e45-459f-a27b-476b1d01c936", 0),   # Lid close action
+        @("4f971e89-eebd-4455-a8de-9e59040e7347", "7648efa3-dd9c-4e3e-b566-50f929386280", 0),   # Power button action
+        @("4f971e89-eebd-4455-a8de-9e59040e7347", "96996bc0-ad50-47ec-923b-6f41874dd9eb", 0),   # Sleep button action
+        @("4f971e89-eebd-4455-a8de-9e59040e7347", "a7066653-8d6c-40a8-910e-a1f54b84c7e5", 0),   # Start menu power button
+        @("501a4d13-42af-4429-9fd1-a8218c268e20", "ee12f906-d277-404b-b6da-e5fa1a576df5", 0),   # Link State Power Management
+        @("54533251-82be-4824-96c1-47b60b740d00", "0cc5b647-c1df-4637-891a-dec35c318583", 75),  # Minimum processor state
+        @("54533251-82be-4824-96c1-47b60b740d00", "0cc5b647-c1df-4637-891a-dec35c318584", 100), # Maximum processor state
+        @("54533251-82be-4824-96c1-47b60b740d00", "06cadf0e-64ed-448a-8927-ce7bf90eb35d", 2),   # Processor performance boost mode
+        @("54533251-82be-4824-96c1-47b60b740d00", "06cadf0e-64ed-448a-8927-ce7bf90eb35e", 100), # Processor performance increase threshold
+        @("54533251-82be-4824-96c1-47b60b740d00", "12a0ab44-fe28-4fa9-b3bd-4b64f44960a6", 0),   # Processor performance decrease threshold
+        @("54533251-82be-4824-96c1-47b60b740d00", "12a0ab44-fe28-4fa9-b3bd-4b64f44960a7", 1),   # Processor performance autonomous mode
+        @("54533251-82be-4824-96c1-47b60b740d00", "12fd031f-53d2-4bf4-ac6d-c699fc9538c7", 1),   # System cooling policy
+        @("54533251-82be-4824-96c1-47b60b740d00", "1a98ad09-af22-42ca-8e61-f0a5802c270a", 0),   # Allow Throttle States
+        @("54533251-82be-4824-96c1-47b60b740d00", "1facfc65-a930-4bc5-9f38-504ec097bbc0", 1),   # Processor idle disable
+        @("5fb4938d-1ee8-4b0f-9a3c-5036b0ab995c", "2430ab6f-a520-44a2-9601-f7f23b5134b1", 0),   # GPU preference policy
+        @("7516b95f-f776-4464-8c53-06167f40cc99", "3c0bc021-c8a8-4e07-a973-6b14cbcb2b7e", -1),  # Dim display after
+        @("7516b95f-f776-4464-8c53-06167f40cc99", "17aaa29b-8b43-4b94-aafe-35f64daaf1ee", -1),  # Turn off display after
+        @("7516b95f-f776-4464-8c53-06167f40cc99", "aded5e82-b909-4619-9949-f5d71dac0bcb", 100), # Display brightness
+        @("7516b95f-f776-4464-8c53-06167f40cc99", "f1fbfde2-a960-4165-9f88-50667911ce96", 100), # Dimmed display brightness
+        @("7516b95f-f776-4464-8c53-06167f40cc99", "fbd9aa66-9553-4097-ba44-ed6e9d65eab8", 0),   # Enable adaptive brightness
+        @("8619b916-e004-4dd8-9b66-8054335b6a1b", "0a7d6ab6-ac83-4ad1-8282-eca5b58308f3", 0),   # User Presence Prediction mode
+        @("9596fb26-9850-41fd-ac3e-f7c3c00afd4b", "468fe7e5-1158-46ec-88bc-5b96c9e44fd0", 1),   # When sharing media
+        @("9596fb26-9850-41fd-ac3e-f7c3c00afd4b", "49cb11a5-56e2-4afb-9d38-3df47872e21b", 1),   # Video playback quality bias
+        @("9596fb26-9850-41fd-ac3e-f7c3c00afd4b", "5adbbfbc-074e-4da1-ba38-db8b36b2c8f3", 0),   # When playing video
+        @("de830923-a562-41af-a086-e3a2c6bad2da", "13d09884-f74e-474a-a852-b6bde8ad03a8", 0)    # Energy Saver Policy
+      )
+
+      foreach ($setting in $tunedSettings) {
+        $subGuid, $setGuid, $acValue = $setting
+        # Find current DC value to preserve it
+        $currentSet = ($global:AllData | Where-Object { $_.SubGuid -eq $subGuid } | ForEach-Object { $_.Settings } | Where-Object { $_.SetGuid -eq $setGuid } | Select-Object -First 1)
+        $dcValue = if ($currentSet) { $currentSet.DC } else { 0 }
+        Set-SettingValue -schemeGuid $schemeGuid -subGuid $subGuid -setGuid $setGuid -acValue $acValue -dcValue $dcValue
+      }
+
+      # Refresh data
+      Refresh-Plans
+      $InfoText.Text = "Tuning applied to '$($scheme.Name)'. Refreshing data..."
+      Start-Sleep -Seconds 2
+      $global:AllData = Get-AllPowerSettings -schemeGuid $schemeGuid
+      Build-Tree -query $SearchBox.Text
+      $InfoText.Text = "Max performance tuning completed for '$($scheme.Name)'."
+    }
+    catch {
+      $InfoText.Text = "Tuning failed: $_"
+    }
+  })
 # Show UI
 $window.ShowDialog() | Out-Null

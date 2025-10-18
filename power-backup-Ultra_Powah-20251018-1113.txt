@@ -1,0 +1,1075 @@
+﻿Power Plan Export: Ultra Powah
+GUID: 03fd6397-f9c8-4766-b11b-dd6d15c7e6de
+Exported on: 10/18/2025 11:13:46
+
+Settings:
+
+Subgroup: Settings belonging to no subgroup (fea3413e-7e05-4911-9a71-700331f1c294)
+  Setting: Require a password on wakeup (0e796bdb-100d-47d6-a2d5-f7d2daa51f51)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+    Choices:
+      0: No
+      1: Yes
+  Setting: Power plan type (245d8541-3943-4422-b025-13a784f679b7)
+    Plugged in (AC) Value: 2
+    On battery (DC) Value: 2
+    Choices:
+      0: Power saver
+      1: High performance
+      2: Balanced
+  Setting: Device idle policy (4faab71a-92e5-4726-b531-224559672d19)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 1
+    Choices:
+      0: Performance
+      1: Power savings
+  Setting: Disconnected Standby Mode (68afb2d9-ee95-47a8-8f50-4115088073b1)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+    Choices:
+      0: Normal
+      1: Aggressive
+  Setting: Networking connectivity in Standby (f15576e8-98b7-4186-b944-eafa664402d9)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 2
+    Choices:
+      0: Disable
+      1: Enable
+      2: Managed by Windows
+
+Subgroup: Hard disk (0012ee47-9041-4b5d-9b77-535fba8b1442)
+  Setting: AHCI Link Power Management - HIPM/DIPM (0b2d69d7-a2a1-449c-9680-f91c70521c60)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 4
+    Choices:
+      0: Active
+      1: HIPM
+      2: HIPM+DIPM
+      3: DIPM
+      4: Lowest
+  Setting: Maximum Power Level (51dea550-bb38-4bc4-991b-eacf37be5ec8)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 100
+    On battery (DC) Value: 100
+  Setting: Turn off hard disk after (6738e2c4-e8a5-4a42-b16a-e040e769756e)
+    Units: Seconds
+    Range: 0 - -1
+    Plugged in (AC) Value: 30
+    On battery (DC) Value: 30
+  Setting: Hard disk burst ignore time (80e3c60e-bb94-4ad8-bbe0-0d3195efc663)
+    Units: Seconds
+    Range: 0 - -1
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 30
+  Setting: Secondary NVMe Idle Timeout (d3d55efd-c1ff-424e-9dc3-441be7833010)
+    Units: milliseconds
+    Range: 0 - 60000
+    Plugged in (AC) Value: 2000
+    On battery (DC) Value: 750
+  Setting: Primary NVMe Idle Timeout (d639518a-e56d-4345-8af2-b9f32fb26109)
+    Units: milliseconds
+    Range: 0 - 60000
+    Plugged in (AC) Value: 200
+    On battery (DC) Value: 75
+  Setting: AHCI Link Power Management - Adaptive (dab60367-53fe-4fbc-825e-521d069d2456)
+    Units: millisecond
+    Range: 0 - 300000
+    Plugged in (AC) Value: 100
+    On battery (DC) Value: 100
+  Setting: Secondary NVMe Power State Transition Latency Tolerance (dbc9e238-6de9-49e3-92cd-8c2b4946b472)
+    Units: milliseconds
+    Range: 0 - 60000
+    Plugged in (AC) Value: 100
+    On battery (DC) Value: 100
+  Setting: NVMe NOPPME (fc7372b6-ab2d-43ee-8797-15e9841f2cca)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 0
+    Choices:
+      0: Off
+      1: On
+  Setting: Primary NVMe Power State Transition Latency Tolerance (fc95af4d-40e7-4b6d-835a-56d131dbc80e)
+    Units: milliseconds
+    Range: 0 - 60000
+    Plugged in (AC) Value: 15
+    On battery (DC) Value: 75
+
+Subgroup: Internet Explorer (02f815b5-a5cf-4c84-bf20-649d1f75d3d8)
+  Setting: JavaScript Timer Frequency (4c793e7d-a264-42e1-87d3-7a0d2f523ccd)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 0
+    Choices:
+      0: Maximum Power Savings
+      1: Maximum Performance
+
+Subgroup: Desktop background settings (0d7dbae2-4294-402a-ba8e-26777e8488cd)
+  Setting: Slide show (309dce9b-bef4-4119-9921-a851fb12f0f4)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 1
+    Choices:
+      0: Available
+      1: Paused
+
+Subgroup: Wireless Adapter Settings (19cbb8fa-5279-450e-9fac-8a3d5fedd0c1)
+  Setting: Power Saving Mode (12bbebe6-58d6-4636-95bb-3217ef867c1a)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 2
+    Choices:
+      0: Maximum Performance
+      1: Low Power Saving
+      2: Medium Power Saving
+      3: Maximum Power Saving
+
+Subgroup: Sleep (238c9fa8-0aad-41ed-83f4-97be242c8f20)
+  Setting: Legacy RTC mitigations (1a34bdc3-7e6b-442e-a9d0-64b6ef378e84)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 0
+    Choices:
+      0: Disable
+      1: Enable
+  Setting: Allow Away Mode Policy (25dfa149-5dd1-4736-b5ab-e8a37b5b8187)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 0
+    Choices:
+      0: No
+      1: Yes
+  Setting: Sleep after (29f6c1db-86da-48c5-9fdb-f2b67b1f44da)
+    Units: Seconds
+    Range: 0 - -1
+    Plugged in (AC) Value: 3600
+    On battery (DC) Value: 600
+  Setting: System unattended sleep timeout (7bc4a2f9-d8fc-4469-b07b-33eb785aaca0)
+    Units: Seconds
+    Range: 0 - -1
+    Plugged in (AC) Value: 120
+    On battery (DC) Value: 120
+  Setting: Allow hybrid sleep (94ac6d29-73ce-41a6-809f-6363ba21b47e)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+    Choices:
+      0: Off
+      1: On
+  Setting: Hibernate after (9d7815a6-7ee4-497e-8888-515a05f02364)
+    Units: Seconds
+    Range: 0 - -1
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 2147483647
+  Setting: Allow system required policy (a4b195f5-8225-47d8-8012-9d41369786e2)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+    Choices:
+      0: No
+      1: Yes
+  Setting: Allow Standby States (abfc2519-3608-4c2a-94ea-171b0ed546ab)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+    Choices:
+      0: Off
+      1: On
+  Setting: Allow wake timers (bd3b718a-0680-4d9d-8ab2-e1d2b4ac806d)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+    Choices:
+      0: Disable
+      1: Enable
+      2: Important Wake Timers Only
+  Setting: Allow sleep with remote opens (d4c1d4c8-d5cc-43d3-b83e-fc51215cb04d)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+    Choices:
+      0: Off
+      1: On
+
+Subgroup: USB settings (2a737441-1930-4402-8d77-b2bebba308a3)
+  Setting: Hub Selective Suspend Timeout (0853a681-27c8-4100-a2fd-82013e970683)
+    Units: Millisecond
+    Range: 0 - 100000
+    Plugged in (AC) Value: 50
+    On battery (DC) Value: 50
+  Setting: USB selective suspend setting (48e6b7a6-50f5-4782-a5d4-53bb8f07e226)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+    Choices:
+      0: Disabled
+      1: Enabled
+  Setting: Setting IOC on all TDs (498c044a-201b-4631-a522-5c744ed4e678)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 0
+    Choices:
+      0: Disabled
+      1: Enabled
+  Setting: USB 3 Link Power Mangement (d4e98f31-5ffe-4ce1-be31-1b38b384c009)
+    Plugged in (AC) Value: 2
+    On battery (DC) Value: 3
+    Choices:
+      0: Off
+      1: Minimum power savings
+      2: Moderate power savings
+      3: Maximum power savings
+
+Subgroup: Idle Resiliency (2e601130-5351-4d9d-8e04-252966bad054)
+  Setting: Execution Required power request timeout (3166bc41-7e98-4e03-b34e-ec0f5f2b218e)
+    Units: Seconds
+    Range: 0 - -1
+    Plugged in (AC) Value: -1
+    On battery (DC) Value: 300
+  Setting: IO coalescing timeout (c36f0eb4-2988-4a70-8eee-0884fc2c2433)
+    Units: Milliseconds
+    Range: 0 - -1
+    Plugged in (AC) Value: 50
+    On battery (DC) Value: 50
+  Setting: Processor Idle Resiliency Timer Resolution (c42b79aa-aa3a-484b-a98f-2cf32aa90a28)
+    Units: Milliseconds
+    Range: 0 - 65000
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+  Setting: Deep Sleep Enabled/Disabled (d502f7ee-1dc7-4efd-a55d-f04b6f5c0545)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+    Choices:
+      0: Deep Sleep Disabled
+      1: Deep Sleep Enabled
+
+Subgroup: Intel(R (44f3beca-a7c0-460e-9df2-bb8b99e0cba6)
+  Setting: Intel(R (3619c3f2-afb2-4afc-b0e9-e7fef372de36)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+    Choices:
+      0: Maximum Battery Life
+      1: Balanced
+      2: Maximum Performance
+
+Subgroup: Interrupt Steering Settings (48672f38-7a9a-4bb2-8bf8-3d85be19de4e)
+  Setting: Interrupt Steering Mode (2bfc24f9-5ea2-4801-8213-3dbae01aa39d)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+    Choices:
+      0: Default
+      1: Any processor
+      2: Any unparked processor with time delay
+      3: Any unparked processor
+      4: Lock Interrupt Routing
+      5: Processor 0
+      6: Processor 1
+  Setting: Target Load (73cde64d-d720-4bb2-a860-c755afe77ef2)
+    Units: Tenths of a percent
+    Range: 0 - 10000
+    Plugged in (AC) Value: 50
+    On battery (DC) Value: 50
+  Setting: Unparked time trigger (d6ba4903-386f-4c2c-8adb-5c21b3328d25)
+    Units: Milliseconds
+    Range: 0 - 100000
+    Plugged in (AC) Value: 100
+    On battery (DC) Value: 100
+
+Subgroup: Intel(R (48df9d60-4f68-11dc-8314-0800200c9a66)
+  Setting: Config TDP Level (07029cd8-4664-4698-95d8-43b2e9666596)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+    Choices:
+      0: High TDP
+      1: Nominal TDP
+      2: Low TDP
+
+Subgroup: Power buttons and lid (4f971e89-eebd-4455-a8de-9e59040e7347)
+  Setting: Lid close action (5ca83367-6e45-459f-a27b-476b1d01c936)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 1
+    Choices:
+      0: Do nothing
+      1: Sleep
+      2: Hibernate
+      3: Shut down
+  Setting: Power button action (7648efa3-dd9c-4e3e-b566-50f929386280)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+    Choices:
+      0: Do nothing
+      1: Sleep
+      2: Hibernate
+      3: Shut down
+      4: Turn off the display
+  Setting: Enable forced button/lid shutdown (833a6b62-dfa4-46d1-82f8-e09e34d029d6)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+    Choices:
+      0: Off
+      1: On
+  Setting: Sleep button action (96996bc0-ad50-47ec-923b-6f41874dd9eb)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+    Choices:
+      0: Do nothing
+      1: Sleep
+      2: Hibernate
+      3: Shut down
+      4: Turn off the display
+  Setting: Lid open action (99ff10e7-23b1-4c07-a9d1-5c3206d741b4)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+    Choices:
+      0: Do nothing
+      1: Turn on the display
+  Setting: Start menu power button (a7066653-8d6c-40a8-910e-a1f54b84c7e5)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+    Choices:
+      0: Sleep
+      1: Hibernate
+      2: Shut down
+
+Subgroup: PCI Express (501a4d13-42af-4429-9fd1-a8218c268e20)
+  Setting: Link State Power Management (ee12f906-d277-404b-b6da-e5fa1a576df5)
+    Plugged in (AC) Value: 2
+    On battery (DC) Value: 2
+    Choices:
+      0: Off
+      1: Moderate power savings
+      2: Maximum power savings
+
+Subgroup: Processor power management (54533251-82be-4824-96c1-47b60b740d00)
+  Setting: Processor performance increase threshold (06cadf0e-64ed-448a-8927-ce7bf90eb35d)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 60
+    On battery (DC) Value: 90
+  Setting: Processor performance increase threshold for Processor Power Efficiency Class 1 (06cadf0e-64ed-448a-8927-ce7bf90eb35e)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 60
+    On battery (DC) Value: 90
+  Setting: Processor performance core parking min cores (0cc5b647-c1df-4637-891a-dec35c318583)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 100
+    On battery (DC) Value: 100
+  Setting: Processor performance core parking min cores for Processor Power Efficiency Class 1 (0cc5b647-c1df-4637-891a-dec35c318584)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+  Setting: Processor performance decrease threshold (12a0ab44-fe28-4fa9-b3bd-4b64f44960a6)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 20
+    On battery (DC) Value: 75
+  Setting: Processor performance decrease threshold for Processor Power Efficiency Class 1 (12a0ab44-fe28-4fa9-b3bd-4b64f44960a7)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 20
+    On battery (DC) Value: 75
+  Setting: Hybrid containment zone important utility percentage (12fd031f-53d2-4bf4-ac6d-c699fc9538c7)
+    Units: %
+    Range: 0 - -1
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+  Setting: Processor Restriction Count (1a98ad09-af22-42ca-8e61-f0a5802c270a)
+    Units: Processor Restriction Count
+    Range: 0 - 64
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+  Setting: Initial performance for Processor Power Efficiency Class 1 when unparked (1facfc65-a930-4bc5-9f38-504ec097bbc0)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 50
+    On battery (DC) Value: 50
+  Setting: Processor performance core parking concurrency threshold (2430ab6f-a520-44a2-9601-f7f23b5134b1)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 97
+    On battery (DC) Value: 97
+  Setting: Processor performance core parking increase time (2ddd5a84-5a71-437e-912a-db0b8c788732)
+    Units: Time check intervals
+    Range: 1 - 100
+    Plugged in (AC) Value: 3
+    On battery (DC) Value: 3
+  Setting: Processor energy performance preference policy (36687f9e-e3a5-4dbf-b1dc-15eb381c6863)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 33
+    On battery (DC) Value: 60
+  Setting: Processor energy performance preference policy for Processor Power Efficiency Class 1 (36687f9e-e3a5-4dbf-b1dc-15eb381c6864)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 33
+    On battery (DC) Value: 60
+  Setting: Processor energy performance preference policy for Processor Power Efficiency Class 2 (36687f9e-e3a5-4dbf-b1dc-15eb381c6865)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 33
+    On battery (DC) Value: 50
+  Setting: Allow Throttle States (3b04d4fd-1cc7-4f23-ab1c-d1337819c4bb)
+    Plugged in (AC) Value: 2
+    On battery (DC) Value: 2
+    Choices:
+      0: Off
+      1: On
+      2: Automatic
+  Setting: Processor performance increase time for Processor Power Efficiency Class 1 (4009efa7-e72d-4cba-9edf-91084ea8cbc3)
+    Units: Time check intervals
+    Range: 1 - 100
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+  Setting: Processor performance decrease policy (40fbefc7-2e9d-4d25-a185-0cfd8574bac6)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 2
+    Choices:
+      0: Ideal
+      1: Single
+      2: Rocket
+  Setting: Processor performance decrease policy for Processor Power Efficiency Class 1 (40fbefc7-2e9d-4d25-a185-0cfd8574bac7)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 2
+    Choices:
+      0: Ideal
+      1: Single
+      2: Rocket
+  Setting: Long running threads' processor architecture lower limit (43f278bc-0f8a-46d0-8b31-9a23e615d713)
+    Units: Processor Architecture Class
+    Range: 0 - 255
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+  Setting: Processor performance core parking parked performance state (447235c7-6a8d-4cc0-8e24-9eaf70b96e2b)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 1
+    Choices:
+      0: No Preference
+      1: Deepest Performance State
+      2: Lightest Performance State
+  Setting: Processor performance core parking parked performance state for Processor Power Efficiency Class 1 (447235c7-6a8d-4cc0-8e24-9eaf70b96e2c)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 1
+    Choices:
+      0: No Preference
+      1: Deepest Performance State
+      2: Lightest Performance State
+  Setting: Processor performance boost policy (45bcc044-d885-43e2-8605-ee0ec6e96b59)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 60
+    On battery (DC) Value: 20
+  Setting: Processor performance increase policy (465e1f50-b610-473a-ab58-00d1077dc418)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+    Choices:
+      0: Ideal
+      1: Single
+      2: Rocket
+      3: IdealAggressive
+  Setting: Processor performance increase policy for Processor Power Efficiency Class 1 (465e1f50-b610-473a-ab58-00d1077dc419)
+    Plugged in (AC) Value: 3
+    On battery (DC) Value: 3
+    Choices:
+      0: Ideal
+      1: Single
+      2: Rocket
+      3: IdealAggressive
+  Setting: Latency sensitivity hint processor energy performance preference (4b70f900-cdd9-4e66-aa26-ae8417f98173)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 100
+    On battery (DC) Value: 100
+  Setting: Latency sensitivity hint processor energy performance preference for Processor Power Efficiency Class 1 (4b70f900-cdd9-4e66-aa26-ae8417f98174)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 100
+    On battery (DC) Value: 100
+  Setting: Latency sensitivity hint processor energy performance preference for Processor Power Efficiency Class 2 (4b70f900-cdd9-4e66-aa26-ae8417f98175)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 100
+    On battery (DC) Value: 100
+  Setting: Processor idle demote threshold (4b92d758-5a24-4851-a470-815d78aee119)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 40
+    On battery (DC) Value: 10
+  Setting: Processor performance core parking distribution threshold (4bdaf4e9-d103-46d7-a5f0-6280121616ef)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 90
+    On battery (DC) Value: 95
+  Setting: Processor performance time check interval (4d2b0152-7d5c-498b-88e2-34345392a2c5)
+    Units: Milliseconds
+    Range: 1 - 5000
+    Plugged in (AC) Value: 30
+    On battery (DC) Value: 40
+  Setting: Processor duty cycling (4e4450b3-6179-4e91-b8f1-5bb9938f81a1)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+    Choices:
+      0: Disabled
+      1: Enabled
+  Setting: Short running threads' processor architecture lower limit (53824d46-87bd-4739-aa1b-aa793fac36d6)
+    Units: Processor Architecture Class
+    Range: 0 - 255
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+  Setting: WPS minimum efficiency score for small cores (5ba7419a-295c-4b02-841b-66799388d6da)
+    Units: WPS score
+    Range: 0 - 255
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+  Setting: Processor idle disable (5d76a2ca-e8c0-402f-a133-2158492d58ad)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+    Choices:
+      0: Enable idle
+      1: Disable idle
+  Setting: Processor resource priority (603fe9ce-8d01-4b48-a968-1d706c28fd5c)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 100
+    On battery (DC) Value: 100
+  Setting: Processor resource priority for Processor Power Efficiency Class 1 (603fe9ce-8d01-4b48-a968-1d706c28fd5d)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 100
+    On battery (DC) Value: 100
+  Setting: Processor resource priority for Processor Power Efficiency Class 2 (603fe9ce-8d01-4b48-a968-1d706c28fd5e)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 100
+    On battery (DC) Value: 100
+  Setting: Hetero containment policy. (60fbe21b-efd9-49f2-b066-8674d8e9f423)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+    Choices:
+      0: Disabled
+      1: Enabled
+  Setting: Latency sensitivity hint min unparked cores/packages (616cdaa5-695e-4545-97ad-97dc2d1bdd88)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 50
+    On battery (DC) Value: 75
+  Setting: Latency sensitivity hint min unparked cores/packages for Processor Power Efficiency Class 1 (616cdaa5-695e-4545-97ad-97dc2d1bdd89)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+  Setting: Latency sensitivity hint processor performance (619b7505-003b-4e82-b7a6-4dd29c300971)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 99
+    On battery (DC) Value: 50
+  Setting: Latency sensitivity hint processor performance for Processor Power Efficiency Class 1 (619b7505-003b-4e82-b7a6-4dd29c300972)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 50
+    On battery (DC) Value: 50
+  Setting: Latency sensitivity hint processor performance for Processor Power Efficiency Class 2 (619b7505-003b-4e82-b7a6-4dd29c300973)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 50
+    On battery (DC) Value: 50
+  Setting: Processor performance increase time for a containment zone (64fcee6b-5b1f-45a4-a76a-19b2c36ee290)
+    Units: Time check intervals
+    Range: 1 - 100
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+  Setting: Processor hybrid containment concurrency threshold (6788488b-1b90-4d11-8fa7-973e470dff47)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+  Setting: Processor efficiency containment concurrency threshold (69439b22-221b-4830-bd34-f7bcece24583)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+  Setting: Processor idle threshold scaling (6c2993b0-8f48-481f-bcc6-00dd2742aa06)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 1
+    Choices:
+      0: Disable scaling
+      1: Enable scaling
+  Setting: Efficiency containment zone important utility percentage (6ece9e1f-b6dd-42bf-b1b7-5a512b10c092)
+    Units: %
+    Range: 0 - -1
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+  Setting: Processor performance decrease time for a containment zone. (6ff13aeb-7897-4356-9999-dd9930af065f)
+    Units: Time check intervals
+    Range: 1 - 100
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+  Setting: Processor performance core parking decrease policy (71021b41-c749-4d21-be74-a00f335d582b)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+    Choices:
+      0: Ideal number of cores
+      1: Single core
+      2: All possible cores
+      3: One eighth cores
+  Setting: Maximum processor frequency (75b0ae3f-bce0-45a7-8c89-c9611c25e100)
+    Units: MHz
+    Range: 0 - -1
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+  Setting: Maximum processor frequency for Processor Power Efficiency Class 1 (75b0ae3f-bce0-45a7-8c89-c9611c25e101)
+    Units: MHz
+    Range: 0 - -1
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+  Setting: Maximum processor frequency for Processor Power Efficiency Class 2 (75b0ae3f-bce0-45a7-8c89-c9611c25e102)
+    Units: MHz
+    Range: 0 - -1
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+  Setting: Processor idle promote threshold (7b224883-b3cc-4d79-819f-8374152cbe7c)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 60
+    On battery (DC) Value: 60
+  Setting: Processor performance history count (7d24baa7-0b84-480f-840c-1b0743c00f5f)
+    Units: Time check intervals
+    Range: 1 - 128
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+  Setting: Processor performance history count for Processor Power Efficiency Class 1 (7d24baa7-0b84-480f-840c-1b0743c00f60)
+    Units: Time check intervals
+    Range: 1 - 128
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+  Setting: Processor performance decrease time for Processor Power Efficiency Class 1 (7f2492b6-60b1-45e5-ae55-773f8cd5caec)
+    Units: Time check intervals
+    Range: 1 - 100
+    Plugged in (AC) Value: 3
+    On battery (DC) Value: 3
+  Setting: Heterogeneous policy in effect (7f2f5cfa-f10c-4823-b5e1-e93ae85f46b5)
+    Plugged in (AC) Value: 4
+    On battery (DC) Value: 4
+    Choices:
+      0: Use heterogeneous policy 0
+      1: Use heterogeneous policy 1
+      2: Use heterogeneous policy 2
+      3: Use heterogeneous policy 3
+      4: Use heterogeneous policy 4
+  Setting: Short running threads' processor architecture upper limit (828423eb-8662-4344-90f7-52bf15870f5a)
+    Units: Processor Architecture Class
+    Range: 0 - 255
+    Plugged in (AC) Value: 255
+    On battery (DC) Value: 255
+  Setting: @C:\WINDOWS\system32\powrprof.dll,-365,Minimum processor state (893dee8e-2bef-41e0-89c6-b55d0929964c)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 75
+    On battery (DC) Value: 5
+    Description: @C:\WINDOWS\system32\powrprof.dll,-364,Specify the minimum performance state of your processor (in percentage). 
+  Setting: @C:\WINDOWS\system32\powrprof.dll,-1203,Minimum processor state for Processor Power Efficiency Class 1 (893dee8e-2bef-41e0-89c6-b55d0929964d)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 5
+    On battery (DC) Value: 5
+    Description: @C:\WINDOWS\system32\powrprof.dll,-1202,Specify the minimum performance state of your Processor Power Efficiency Class 1 processor (in percentage). 
+  Setting: Minimum processor state for Processor Power Efficiency Class 2 (893dee8e-2bef-41e0-89c6-b55d0929964e)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 5
+    On battery (DC) Value: 5
+  Setting: Processor performance autonomous mode (8baa4a8a-14c6-4451-8e8b-14bdbd197537)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+    Choices:
+      0: Disabled
+      1: Enabled
+  Setting: Heterogeneous thread scheduling policy (93b8b6dc-0698-4d1c-9ee4-0644e900c85d)
+    Plugged in (AC) Value: 5
+    On battery (DC) Value: 5
+    Choices:
+      0: All processors
+      1: Performant processors
+      2: Prefer performant processors
+      3: Efficient processors
+      4: Prefer efficient processors
+      5: Automatic
+  Setting: Processor performance core parking overutilization threshold (943c8cb6-6f93-4227-ad87-e9a3feec08d1)
+    Units: %
+    Range: 5 - 100
+    Plugged in (AC) Value: 85
+    On battery (DC) Value: 85
+  Setting: System cooling policy (94d3a615-a899-4ac5-ae2b-e4d8f634367f)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 0
+    Choices:
+      0: Passive
+      1: Active
+  Setting: Processor performance core parking soft park latency (97cfac41-2217-47eb-992d-618b1977c907)
+    Units: Microseconds
+    Range: 0 - -1
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+  Setting: Processor performance increase time (984cf492-3bed-4488-a8f9-4286c97bf5aa)
+    Units: Time check intervals
+    Range: 1 - 100
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+  Setting: Processor performance increase time for Processor Power Efficiency Class 1 (984cf492-3bed-4488-a8f9-4286c97bf5ab)
+    Units: Time check intervals
+    Range: 1 - 100
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+  Setting: Processor idle state maximum (9943e905-9a30-4ec1-9b99-44dd3b76f7a2)
+    Units: State Type
+    Range: 0 - 20
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+  Setting: Processor performance level increase threshold for Processor Power Efficiency Class 1 processor count increase (b000397d-9b0b-483d-98c9-692a6060cfbf)
+    Plugged in (AC) Value: 255
+    On battery (DC) Value: 255
+  Setting: Processor performance level increase threshold for Processor Power Efficiency Class 2 processor count increase (b000397d-9b0b-483d-98c9-692a6060cfc0)
+    Plugged in (AC) Value: 255
+    On battery (DC) Value: 255
+  Setting: Module unpark policy (b0deaf6b-59c0-4523-8a45-ca7f40244114)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+    Choices:
+      0: Disabled
+      1: Round robin
+      2: Sequential
+  Setting: Smt threads unpark policy (b28a6829-c5f7-444e-8f61-10e24e85c532)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+    Choices:
+      0: Core
+      1: Core per Thread
+      2: Round robin
+      3: Sequential
+  Setting: Complex unpark policy (b669a5e9-7b1d-4132-baaa-49190abcfeb6)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+    Choices:
+      0: Disabled
+      1: Round robin
+      2: Sequential
+  Setting: Heterogeneous short running thread scheduling policy (bae08b81-2d5e-4688-ad6a-13243356654b)
+    Plugged in (AC) Value: 5
+    On battery (DC) Value: 5
+    Choices:
+      0: All processors
+      1: Performant processors
+      2: Prefer performant processors
+      3: Efficient processors
+      4: Prefer efficient processors
+      5: Automatic
+  Setting: Maximum processor state (bc5038f7-23e0-4960-96da-33abaf5935ec)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 100
+    On battery (DC) Value: 70
+  Setting: Maximum processor state for Processor Power Efficiency Class 1 (bc5038f7-23e0-4960-96da-33abaf5935ed)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 100
+    On battery (DC) Value: 90
+  Setting: Maximum processor state for Processor Power Efficiency Class 2 (bc5038f7-23e0-4960-96da-33abaf5935ee)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 100
+    On battery (DC) Value: 100
+  Setting: Processor performance boost mode (be337238-0d82-4146-a960-4f3749d470c7)
+    Plugged in (AC) Value: 2
+    On battery (DC) Value: 4
+    Choices:
+      0: Disabled
+      1: Enabled
+      2: Aggressive
+      3: Efficient Enabled
+      4: Efficient Aggressive
+      5: Aggressive At Guaranteed
+      6: Efficient Aggressive At Guaranteed
+  Setting: Long running threads' processor architecture upper limit (bf903d33-9d24-49d3-a468-e65e0325046a)
+    Units: Processor Architecture Class
+    Range: 0 - 255
+    Plugged in (AC) Value: 255
+    On battery (DC) Value: 255
+  Setting: Processor idle time check (c4581c31-89ab-4597-8e2b-9c9cab440e6b)
+    Units: Microseconds
+    Range: 1 - 200000
+    Plugged in (AC) Value: 50000
+    On battery (DC) Value: 75000
+  Setting: Processor performance core parking increase policy (c7be0679-2817-4d69-9d02-519a537ed0c6)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 2
+    Choices:
+      0: Ideal number of cores
+      1: Single core
+      2: All possible cores
+      3: One eighth cores
+  Setting: Processor autonomous activity window (cfeda3d0-7697-4566-a922-a9086cd49dfa)
+    Units: Microseconds
+    Range: 0 - 1270000000
+    Plugged in (AC) Value: 30000
+    On battery (DC) Value: 30000
+  Setting: Processor performance decrease time (d8edeb9b-95cf-4f95-a73c-b061973693c8)
+    Units: Time check intervals
+    Range: 1 - 100
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+  Setting: Processor performance decrease time for Processor Power Efficiency Class 1 (d8edeb9b-95cf-4f95-a73c-b061973693c9)
+    Units: Time check intervals
+    Range: 1 - 100
+    Plugged in (AC) Value: 2
+    On battery (DC) Value: 2
+  Setting: Short vs. long running thread threshold (d92998c2-6a48-49ca-85d4-8cceec294570)
+    Units: Microseconds
+    Range: 0 - 100000
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+  Setting: Processor performance core parking decrease time (dfd10d17-d5eb-45dd-877a-9a34ddd15c82)
+    Units: Time check intervals
+    Range: 1 - 100
+    Plugged in (AC) Value: 10
+    On battery (DC) Value: 5
+  Setting: Processor performance core parking utility distribution (e0007330-f589-42ed-a401-5ddb10e785d3)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 1
+    Choices:
+      0: Disabled
+      1: Enabled
+  Setting: Processor performance core parking max cores (ea062031-0e34-4ff1-9b6d-eb1059334028)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 100
+    On battery (DC) Value: 75
+  Setting: Processor performance core parking max cores for Processor Power Efficiency Class 1 (ea062031-0e34-4ff1-9b6d-eb1059334029)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 100
+    On battery (DC) Value: 75
+  Setting: Processor performance core parking concurrency headroom threshold (f735a673-2066-4f80-a0c5-ddee0cf1bf5d)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 20
+    On battery (DC) Value: 50
+  Setting: Processor performance level decrease threshold for Processor Power Efficiency Class 1 processor count decrease (f8861c27-95e7-475c-865b-13c0cb3f9d6b)
+    Plugged in (AC) Value: 255
+    On battery (DC) Value: 255
+  Setting: Processor performance level decrease threshold for Processor Power Efficiency Class 2 processor count decrease (f8861c27-95e7-475c-865b-13c0cb3f9d6c)
+    Plugged in (AC) Value: 255
+    On battery (DC) Value: 255
+  Setting: A floor performance for Processor Power Efficiency Class 0 when there are Processor Power Efficiency Class 1 processors unparked (fddc842b-8364-4edc-94cf-c17f60de1c80)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 100
+    On battery (DC) Value: 75
+
+Subgroup: Graphics settings (5fb4938d-1ee8-4b0f-9a3c-5036b0ab995c)
+  Setting: GPU preference policy (dd848b2a-8a5d-4451-9ae2-39cd41658f6c)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 1
+    Choices:
+      0: None
+      1: Low Power
+
+Subgroup: Display (7516b95f-f776-4464-8c53-06167f40cc99)
+  Setting: Dim display after (17aaa29b-8b43-4b94-aafe-35f64daaf1ee)
+    Units: Seconds
+    Range: 0 - -1
+    Plugged in (AC) Value: 585
+    On battery (DC) Value: 225
+  Setting: Turn off display after (3c0bc021-c8a8-4e07-a973-6b14cbcb2b7e)
+    Units: Seconds
+    Range: 0 - -1
+    Plugged in (AC) Value: 1800
+    On battery (DC) Value: 300
+  Setting: Advanced Color quality bias (684c3e69-a4f7-4014-8754-d45179a56167)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 0
+    Choices:
+      0: Advanced Color power saving bias
+      1: Advanced Color visual quality bias
+  Setting: Console lock display off timeout (8ec4b3a5-6868-48c2-be75-4f3044be88a7)
+    Units: Seconds
+    Range: 0 - -1
+    Plugged in (AC) Value: 30
+    On battery (DC) Value: 30
+  Setting: Adaptive display (90959d22-d6a1-49b9-af93-bce885ad335b)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+    Choices:
+      0: Off
+      1: On
+  Setting: Allow display required policy (a9ceb8da-cd46-44fb-a98b-02af69de4623)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+    Choices:
+      0: No
+      1: Yes
+  Setting: Display brightness (aded5e82-b909-4619-9949-f5d71dac0bcb)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 90
+    On battery (DC) Value: 90
+  Setting: Dimmed display brightness (f1fbfde2-a960-4165-9f88-50667911ce96)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 50
+    On battery (DC) Value: 50
+  Setting: Enable adaptive brightness (fbd9aa66-9553-4097-ba44-ed6e9d65eab8)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+    Choices:
+      0: Off
+      1: On
+
+Subgroup: Presence Aware Power Behavior (8619b916-e004-4dd8-9b66-dae86f806698)
+  Setting: Human Presence Sensor Adaptive Away Display Timeout (0a7d6ab6-ac83-4ad1-8282-eca5b58308f3)
+    Units: Seconds
+    Range: 0 - -1
+    Plugged in (AC) Value: 30
+    On battery (DC) Value: 30
+  Setting: Standby Reserve Time (468fe7e5-1158-46ec-88bc-5b96c9e44fd0)
+    Units: Seconds
+    Range: 0 - -1
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 1200
+  Setting: Standby Reset Percentage (49cb11a5-56e2-4afb-9d38-3df47872e21b)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 75
+  Setting: Non-sensor Input Presence Timeout (5adbbfbc-074e-4da1-ba38-db8b36b2c8f3)
+    Units: Seconds
+    Range: 0 - -1
+    Plugged in (AC) Value: 240
+    On battery (DC) Value: 240
+  Setting: Standby Budget Grace Period (60c07fe1-0556-45cf-9903-d56e32210242)
+    Units: Seconds
+    Range: 0 - -1
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 900
+  Setting: Standby Budget Refresh Interval (61f45dfe-1919-4180-bb46-8cc70e0b38f1)
+    Units: Seconds
+    Range: 0 - -1
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 43200
+  Setting: User Presence Prediction mode (82011705-fb95-4d46-8d35-4042b1d20def)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 1
+    Choices:
+      0: Disabled
+      1: Enabled
+  Setting: Standby Budget Percent (9fe527be-1b70-48da-930d-7bcf17b44990)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 5
+  Setting: Human Presence Sensor Adaptive Away Dim Timeout (a79c8e0e-f271-482d-8f8a-5db9a18312de)
+    Units: Seconds
+    Range: 0 - -1
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+  Setting: Standby Budget Refresh Count (aca8648e-c4b1-4baa-8cce-9390ad647f8c)
+    Units: Interval Count
+    Range: 0 - 100
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 4
+  Setting: Standby Reserve Grace Period (c763ee92-71e8-4127-84eb-f6ed043a3e3d)
+    Units: Seconds
+    Range: 0 - -1
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 300
+  Setting: Human Presence Sensor Adaptive Inattentive Dim Timeout (cf8c6097-12b8-4279-bbdd-44601ee5209d)
+    Units: Seconds
+    Range: 0 - -1
+    Plugged in (AC) Value: 5
+    On battery (DC) Value: 5
+  Setting: Human Presence Sensor Adaptive Inattentive Display Timeout (ee16691e-6ab3-4619-bb48-1c77c9357e5a)
+    Units: Seconds
+    Range: 0 - -1
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+
+Subgroup: Multimedia settings (9596fb26-9850-41fd-ac3e-f7c3c00afd4b)
+  Setting: When sharing media (03680956-93bc-4294-bba6-4e0f09bb717f)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 0
+    Choices:
+      0: Allow the computer to sleep
+      1: Prevent idling to sleep
+      2: Allow the computer to enter Away Mode
+  Setting: Video playback quality bias (10778347-1370-4ee0-8bbd-33bdacaade49)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 0
+    Choices:
+      0: Video playback power-saving bias
+      1: Video playback performance bias
+  Setting: When playing video (34c7b99f-9a6d-4b3c-8dc7-b6693b78cef4)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 1
+    Choices:
+      0: Optimize video quality
+      1: Balanced
+      2: Optimize power savings
+
+Subgroup: Energy Saver settings (de830923-a562-41af-a086-e3a2c6bad2da)
+  Setting: Display brightness weight (13d09884-f74e-474a-a852-b6bde8ad03a8)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 70
+    On battery (DC) Value: 70
+  Setting: Energy Saver Policy (5c5bb349-ad29-4ee2-9d0b-2b25270f7a81)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 1
+    Choices:
+      0: User
+      1: Aggressive
+  Setting: Charge level (e69653ca-cf7f-4f05-aa73-cb833fa90ad4)
+    Units: Percent battery charge
+    Range: 0 - 100
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 30
+
+Subgroup: Battery (e73a048d-bf27-4f12-9731-8b2076e8891f)
+  Setting: Critical battery notification (5dbb7c9f-38e9-40d2-9749-4f8a0e9f640f)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+    Choices:
+      0: Off
+      1: On
+  Setting: Critical battery action (637ea02f-bbcb-4015-8e2c-a1c7b9c0b546)
+    Plugged in (AC) Value: 2
+    On battery (DC) Value: 2
+    Choices:
+      0: Do nothing
+      1: Sleep
+      2: Hibernate
+      3: Shut down
+  Setting: Low battery level (8183ba9a-e910-48da-8769-14ae6dc1170a)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 6
+    On battery (DC) Value: 6
+  Setting: Critical battery level (9a66d8d7-4ff7-4ef9-b5a2-5a326ca2a469)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 2
+    On battery (DC) Value: 2
+  Setting: Low battery notification (bcded951-187b-4d05-bccc-f7e51960c258)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+    Choices:
+      0: Off
+      1: On
+  Setting: Low battery action (d8742dcb-3e6a-4b3c-b3fe-374623cdcf06)
+    Plugged in (AC) Value: 0
+    On battery (DC) Value: 0
+    Choices:
+      0: Do nothing
+      1: Sleep
+      2: Hibernate
+      3: Shut down
+  Setting: Reserve battery level (f3c5027d-cd16-4930-aa6b-90db844a8f00)
+    Units: %
+    Range: 0 - 100
+    Plugged in (AC) Value: 4
+    On battery (DC) Value: 4
+  Setting: Intel(R (a4f06079-f3e9-45e0-8562-8aa45ae221fa)
+    Plugged in (AC) Value: 1
+    On battery (DC) Value: 1
+    Choices:
+      0: Low Performance
+      1: Medium Performance
+      2: High Performance
